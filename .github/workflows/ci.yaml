@@ -9,6 +9,6 @@ jobs:
         run: |
           echo "hello world"
       - name: run python script
-        uses: |
+        run: |
           pip install requirements.txt
           python ci.py
