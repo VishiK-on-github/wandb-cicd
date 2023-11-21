@@ -1,0 +1,13 @@
+name: io-variable
+on: [push]
+
+jobs:
+  io:
+    runs-on: ubuntu-latest
+    steps:
+      - name: step-init
+        id: step-init
+        run: echo "key=value" >> $GITHUB_OUTPUT
+      - name: get-value
+        id: get-value
+        run: echo "${{ steps.step-init.outputs.key }}"
