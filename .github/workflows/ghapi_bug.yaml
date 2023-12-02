@@ -1,7 +1,9 @@
 name: label pr as bug
-on:
-  issue_comment:
-    types: [created, edited, deleted]
+on: issue_comment
+
+permissions:
+  issues: write
+  pull-requests: write
 
 jobs:
   label:
