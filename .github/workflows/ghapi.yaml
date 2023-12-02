@@ -10,6 +10,9 @@ jobs:
   ghapi:
     runs-on: ubuntu-latest
     steps:
+      - name: Copy Repository Contents
+        uses: actions/checkout@main
+
       - name: install dependencies
         run: pip install ghapi
 
