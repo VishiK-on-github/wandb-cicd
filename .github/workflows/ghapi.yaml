@@ -13,13 +13,17 @@ jobs:
       - name: Copy Repository Contents
         uses: actions/checkout@main
 
-      # - name: install dependencies
-      #   run: pip install ghapi
+      - name: install dependencies
+        run: pip install ghapi
 
       - name: make a comment
-        run: |
-          pip install ghapi
-          python ghapi.py
+        shell: python
+        run: 
+          import os
+          from ghapi.core import GhApi
+          owner,repo = os.environ['REPO'].split('/')
+          api = GhApi(owner=owner, repo=repo)
+          api.issues.create_comment(os.environ['NUMBER'], "Hi! I'm making a comment with `ghapi` in Actions!")
         env:
           NUMBER: ${{ github.event.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
