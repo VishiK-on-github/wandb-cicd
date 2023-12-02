@@ -13,11 +13,13 @@ jobs:
       - name: Copy Repository Contents
         uses: actions/checkout@main
 
-      - name: install dependencies
-        run: pip install ghapi
+      # - name: install dependencies
+      #   run: pip install ghapi
 
       - name: make a comment
-        run: python ghapi.py
+        run: |
+          pip install ghapi
+          python ghapi.py
         env:
           NUMBER: ${{ github.event.number }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
