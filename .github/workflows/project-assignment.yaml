@@ -23,7 +23,7 @@ jobs:
         shell: python
         run: |
           import re, os
-          comment = os.getenv('PR_COMMENT', '')
+          comment = os.getenv('COMMENT', '')
           match = re.search('/wandb[\s+](\S+)', comment)
 
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
@@ -34,7 +34,7 @@ jobs:
             else:
               print(f'VAL_FOUND=false', file=f)
         env:
-          PR_COMMENT: ${{ github.event.comment.body }}
+          COMMENT: ${{ github.event.comment.body }}
 
       - name: make comparison report
         if: steps.run-id-value.outputs.VAL_FOUND == 'true'

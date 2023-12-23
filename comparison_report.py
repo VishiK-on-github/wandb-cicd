@@ -5,27 +5,21 @@ assert os.getenv("WANDB_API_KEY"), "You must set the WANDB_API_KEY environment v
 
 
 def get_baseline_run(entity="vck281000", project="mlops-course-001", tag="baseline"):
-    "Get the baseline run from the project using tags"
-
     api = wandb.Api()
     runs = api.runs(f"{entity}/{project}", {"tags": {"$in": [tag]}})
-    assert len(runs) == 1, 'There must be exactly one run with the tag "baseline"'
+    assert len(runs) == 1, 'Only one run should have tag "baseline"'
     return runs[0]
 
 
 def compare_runs(
     entity="vck281000", project="mlops-course-001", tag="baseline", run_id=None
 ):
-    "Compare the current run to the baseline run."
-
-    # Allow you to override the args with env variables
     entity = os.getenv("WANDB_ENTITY") or entity
     project = os.getenv("WANDB_PROJECT") or project
     tag = os.getenv("BASELINE_TAG") or tag
     run_id = os.getenv("RUN_ID") or run_id
-    assert (
-        run_id
-    ), "You must set the RUN_ID environment variable or pass a `run_id` argument"
+
+    assert run_id, "Set the RUN_ID environment variable or pass a `run_id` argument"
 
     baseline = get_baseline_run(entity=entity, project=project, tag=tag)
     report = wr.Report(
@@ -48,15 +42,11 @@ def compare_runs(
     report.blocks = report.blocks[:1] + [pg] + report.blocks[1:]
     report.save()
 
-    if os.getenv(
-        "CI"
-    ):  # is set to `true` in GitHub Actions https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
-        with open(
-            os.environ["GITHUB_OUTPUT"], "a"
-        ) as f:  # write the output variable REPORT_URL to the GITHUB_OUTPUT file
+    if os.getenv("CI"):
+        with open(os.environ["GITHUB_OUTPUT"], "a") as f:
             print(f"REPORT_URL={report.url}", file=f)
     return report.url
 
 
 if __name__ == "__main__":
-    print(f"The comparison report can found at: {compare_runs()}")
+    print(f"Comparison report location: {compare_runs()}")
